@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace UnityGameFramework.Editor.AssetBundleTools
 {
-    internal partial class AssetBundleEditor
+    internal sealed partial class AssetBundleEditor
     {
         private sealed class AssetBundleItem
         {
@@ -58,7 +58,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
             {
                 get
                 {
-                    return (Folder.Folder == null ? Name : string.Format("{0}/{1}", Folder.FromRootPath, Name));
+                    return (Folder.Folder == null ? Name : Utility.Text.Format("{0}/{1}", Folder.FromRootPath, Name));
                 }
             }
 

@@ -20,7 +20,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
     /// <summary>
     /// 资源包收集器。
     /// </summary>
-    internal sealed class AssetBundleCollection
+    public sealed class AssetBundleCollection
     {
         private const string AssetBundleNamePattern = @"^([A-Za-z0-9\._-]+/)*[A-Za-z0-9\._-]+$";
         private const string AssetBundleVariantPattern = @"^[a-z0-9_-]+$";
@@ -118,8 +118,8 @@ namespace UnityGameFramework.Editor.AssetBundleTools
 
                     if (!AddAssetBundle(assetBundleName, assetBundleVariant, (AssetBundleLoadType)assetBundleLoadType, assetBundlePacked))
                     {
-                        string assetBundleFullName = assetBundleVariant != null ? string.Format("{0}.{1}", assetBundleName, assetBundleVariant) : assetBundleName;
-                        Debug.LogWarning(string.Format("Can not add AssetBundle '{0}'.", assetBundleFullName));
+                        string assetBundleFullName = assetBundleVariant != null ? Utility.Text.Format("{0}.{1}", assetBundleName, assetBundleVariant) : assetBundleName;
+                        Debug.LogWarning(Utility.Text.Format("Can not add AssetBundle '{0}'.", assetBundleFullName));
                         continue;
                     }
                 }
@@ -144,8 +144,8 @@ namespace UnityGameFramework.Editor.AssetBundleTools
                     string assetBundleVariant = xmlNode.Attributes.GetNamedItem("AssetBundleVariant") != null ? xmlNode.Attributes.GetNamedItem("AssetBundleVariant").Value : null;
                     if (!AssignAsset(assetGuid, assetBundleName, assetBundleVariant))
                     {
-                        string assetBundleFullName = assetBundleVariant != null ? string.Format("{0}.{1}", assetBundleName, assetBundleVariant) : assetBundleName;
-                        Debug.LogWarning(string.Format("Can not assign asset '{0}' to AssetBundle '{1}'.", assetGuid, assetBundleFullName));
+                        string assetBundleFullName = assetBundleVariant != null ? Utility.Text.Format("{0}.{1}", assetBundleName, assetBundleVariant) : assetBundleName;
+                        Debug.LogWarning(Utility.Text.Format("Can not assign asset '{0}' to AssetBundle '{1}'.", assetGuid, assetBundleFullName));
                         continue;
                     }
                 }
@@ -264,7 +264,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
             }
 
             AssetBundle assetBundle = null;
-            if (m_AssetBundles.TryGetValue(GetAssetBundleFullName(assetBundleName, assetBundleVariant), out assetBundle))
+            if (m_AssetBundles.TryGetValue(GetAssetBundleFullName(assetBundleName, assetBundleVariant).ToLower(), out assetBundle))
             {
                 return assetBundle;
             }
@@ -279,7 +279,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
                 return false;
             }
 
-            return m_AssetBundles.ContainsKey(GetAssetBundleFullName(assetBundleName, assetBundleVariant));
+            return m_AssetBundles.ContainsKey(GetAssetBundleFullName(assetBundleName, assetBundleVariant).ToLower());
         }
 
         public bool AddAssetBundle(string assetBundleName, string assetBundleVariant, AssetBundleLoadType assetBundleLoadType, bool assetBundlePacked)
@@ -295,7 +295,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
             }
 
             AssetBundle assetBundle = AssetBundle.Create(assetBundleName, assetBundleVariant, assetBundleLoadType, assetBundlePacked);
-            m_AssetBundles.Add(assetBundle.FullName, assetBundle);
+            m_AssetBundles.Add(assetBundle.FullName.ToLower(), assetBundle);
 
             return true;
         }
@@ -318,9 +318,9 @@ namespace UnityGameFramework.Editor.AssetBundleTools
                 return false;
             }
 
-            m_AssetBundles.Remove(assetBundle.FullName);
+            m_AssetBundles.Remove(assetBundle.FullName.ToLower());
             assetBundle.Rename(newAssetBundleName, newAssetBundleVariant);
-            m_AssetBundles.Add(assetBundle.FullName, assetBundle);
+            m_AssetBundles.Add(assetBundle.FullName.ToLower(), assetBundle);
 
             return true;
         }
@@ -340,7 +340,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
 
             Asset[] assets = assetBundle.GetAssets();
             assetBundle.Clear();
-            m_AssetBundles.Remove(assetBundle.FullName);
+            m_AssetBundles.Remove(assetBundle.FullName.ToLower());
             foreach (Asset asset in assets)
             {
                 m_Assets.Remove(asset.Guid);
@@ -464,7 +464,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
                     continue;
                 }
 
-                if (Path.GetFileName(assetInAssetBundle.Name) == Path.GetFileName(assetName))
+                if (Path.GetFileName(assetInAssetBundle.Name).ToLower() == Path.GetFileName(assetName).ToLower())
                 {
                     return false;
                 }
@@ -573,7 +573,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
 
         private string GetAssetBundleFullName(string assetBundleName, string assetBundleVariant)
         {
-            return (!string.IsNullOrEmpty(assetBundleVariant) ? string.Format("{0}.{1}", assetBundleName, assetBundleVariant) : assetBundleName);
+            return (!string.IsNullOrEmpty(assetBundleVariant) ? Utility.Text.Format("{0}.{1}", assetBundleName, assetBundleVariant) : assetBundleName);
         }
     }
 }

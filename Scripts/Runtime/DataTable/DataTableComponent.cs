@@ -9,6 +9,7 @@ using GameFramework;
 using GameFramework.DataTable;
 using GameFramework.Resource;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnityGameFramework.Runtime
@@ -95,7 +96,7 @@ namespace UnityGameFramework.Runtime
                 return;
             }
 
-            dataTableHelper.name = string.Format("Data Table Helper");
+            dataTableHelper.name = "Data Table Helper";
             Transform transform = dataTableHelper.transform;
             transform.SetParent(this.transform);
             transform.localScale = Vector3.one;
@@ -416,6 +417,15 @@ namespace UnityGameFramework.Runtime
         public DataTableBase[] GetAllDataTables()
         {
             return m_DataTableManager.GetAllDataTables();
+        }
+
+        /// <summary>
+        /// 获取所有数据表。
+        /// </summary>
+        /// <param name="results">所有数据表。</param>
+        public void GetAllDataTables(List<DataTableBase> results)
+        {
+            m_DataTableManager.GetAllDataTables(results);
         }
 
         /// <summary>

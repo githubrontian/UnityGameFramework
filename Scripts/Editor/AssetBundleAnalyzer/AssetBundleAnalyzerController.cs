@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace UnityGameFramework.Editor.AssetBundleTools
 {
-    internal sealed partial class AssetBundleAnalyzerController
+    public sealed partial class AssetBundleAnalyzerController
     {
         private readonly AssetBundleCollection m_AssetBundleCollection;
 
@@ -107,7 +107,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
                 string assetName = assets[i].Name;
                 if (string.IsNullOrEmpty(assetName))
                 {
-                    Debug.LogWarning(string.Format("Can not find asset by guid '{0}'.", assets[i].Guid));
+                    Debug.LogWarning(Utility.Text.Format("Can not find asset by guid '{0}'.", assets[i].Guid));
                     continue;
                 }
 
@@ -145,14 +145,13 @@ namespace UnityGameFramework.Editor.AssetBundleTools
                     continue;
                 }
 
-
                 if (dependencyAssetName.EndsWith(".unity"))
                 {
                     // 忽略对场景的依赖
                     continue;
                 }
 
-                Stamp stamp = new Stamp(assetName, dependencyAssetName);
+                Stamp stamp = new Stamp(hostAsset.Name, dependencyAssetName);
                 if (m_AnalyzedStamps.Contains(stamp))
                 {
                     continue;
@@ -163,7 +162,7 @@ namespace UnityGameFramework.Editor.AssetBundleTools
                 string guid = AssetDatabase.AssetPathToGUID(dependencyAssetName);
                 if (string.IsNullOrEmpty(guid))
                 {
-                    Debug.LogWarning(string.Format("Can not find guid by asset '{0}'.", dependencyAssetName));
+                    Debug.LogWarning(Utility.Text.Format("Can not find guid by asset '{0}'.", dependencyAssetName));
                     continue;
                 }
 
